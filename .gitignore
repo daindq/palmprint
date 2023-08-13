@@ -7,5 +7,7 @@
 __pycache__
 out/*/
 .*/
-data/
-experiments/
+data/*/*/
+experiments/*/*.tar
+experiments/*/*.log
+experiments/*/*.json
