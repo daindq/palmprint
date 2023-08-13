@@ -1,0 +1,11 @@
+.git[0-9]+
+*.bin
+*.pickle
+*.csv
+*.pyc
+*.swp
+__pycache__
+out/*/
+.*/
+data/
+experiments/
