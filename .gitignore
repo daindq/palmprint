@@ -11,3 +11,4 @@ data/*/*/
 experiments/*/*.tar
 experiments/*/*.log
 experiments/*/*.json
+experiments/*/*.zip
