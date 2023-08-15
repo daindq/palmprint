@@ -16,7 +16,7 @@ import model.data_loader as data_loader
 from evaluate import evaluate
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data_dir', default='data/Tongji Segmented',
+parser.add_argument('--data_dir', default='data/Tongji',
                     help="Directory containing the dataset")
 parser.add_argument('--dataset', choices=['IIT Delhi V1','IIT Delhi V1 Segmented','Tongji','Tongji Segmented','REST'], help="Choose between datasets")
 parser.add_argument('--model_dir', default='experiments/base_model',

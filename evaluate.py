@@ -82,6 +82,7 @@ def evaluate(model, loss_fn, test_dataloader,train_dataloader, metrics, params):
         summary_batch['threshold'] = threshold
         summary_batch['loss'] = loss[0].item()
         summary_batch['length triplets'] = loss[1]
+        summary_batch['Accuracy'] = metrics["Accuracy"](enrolled_embeds, enrolled_labels, output_batch, labels_batch, threshold, "cpu")
         summ.append(summary_batch)
 
 

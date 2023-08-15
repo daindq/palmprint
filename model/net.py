@@ -251,6 +251,29 @@ def pdist_diff_shape(vectors1, vectors2):
     return distance_matrix
 
 
+def accuracy(enrolled_embedding, enrolled_labels, eval_embedding, eval_labels, threshold, device):
+    distances = pdist_diff_shape(eval_embedding,enrolled_embedding).to(device)
+    same_mask = torch.zeros((eval_labels.size()[0], enrolled_labels.size()[0]), dtype=bool).to(device)
+    min_mask = torch.zeros((eval_labels.size()[0], enrolled_labels.size()[0]), dtype=bool).to(device)
+    idx_min = torch.argmin(distances, dim=-1).to(device)
+    for i in range(len(eval_labels)):
+        indices = torch.where(enrolled_labels == eval_labels[i])[0].tolist()
+        same_mask[i, indices] = True
+        indices = idx_min[i].item()
+        min_mask[i, indices] = True
+    distances = torch.mul(distances, min_mask)
+    assert type(threshold)==float
+    distances = distances - threshold
+    distances[distances <= 0] = 1
+    distances[distances > 0] = 0
+    distances = torch.mul(distances, same_mask)
+    acc = (distances.sum()/(len(eval_labels))).to("cpu").item()*100
+    for item in [distances, min_mask, same_mask, indices, idx_min]:
+        del item 
+    if not(device=="cpu"):
+        torch.cuda.empty_cache()
+    return acc
+
 def eer(enrolled_embedding, enrolled_labels, eval_embedding, eval_labels, device):
     '''
     Calculate equal error rate
@@ -310,6 +333,6 @@ loss_fn = OnlineTripletLoss(margin, RandomNegativeTripletSelector(margin))
 
 # maintain all metrics required in this dictionary- these are used in the training and evaluation loops
 metrics = {
-    'EER': eer, 'Average Non Zero': AverageNonzeroTripletsMetric
+    'EER': eer, 'Average Non Zero': AverageNonzeroTripletsMetric, "Accuracy": accuracy
     # could add more metrics such as accuracy for each token type
 }
